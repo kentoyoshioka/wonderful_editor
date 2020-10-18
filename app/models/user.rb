@@ -41,4 +41,8 @@ class User < ApplicationRecord
   has_many :articles, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :article_likes, dependent: :destroy
+
+  validates :name, presence: true, length: { maximum: 16 }
+  validates :email, presence: true
+  validates :password, presence: true, length: { minimum: 8, maximum: 14 }, format: { with: /\A(?=.&#042;?[a-z])(?=.&#042;?\d)[a-z\d]+\z/i }
 end
