@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: users
@@ -30,19 +28,30 @@
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #  index_users_on_uid_and_provider      (uid,provider) UNIQUE
 #
-class User < ApplicationRecord
-  extend Devise::Models # 追加
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
-  include DeviseTokenAuth::Concerns::User
+require "rails_helper"
 
-  has_many :articles, dependent: :destroy
-  has_many :comments, dependent: :destroy
-  has_many :article_likes, dependent: :destroy
+RSpec.describe User, type: :model do
+  context "name カラムに値が存在する"
+  it "validationを通過し、userが作成される" do
+    user = build(:user)
+    expect(user).to be_valid
+  end
 
-  validates :name, presence: true, length: { maximum: 14 }
-  validates :email, presence: true
-  validates :password, presence: true
+  context "name カラムに値が存在しない時"
+  it "name が存在しないので、エラーになる" do
+    user = build(:user, name: "")
+    expect(user).to be_invalid
+  end
+
+  context "name カラムの文字数が 14 字以内である時"
+  it "validationを通過" do
+    user = build(:user, name: "lokijuhygtfrde")
+    expect(user).to be_valid
+  end
+
+  context "name カラムの文字数が 14 字以上である時"
+  it "name が 14 以上なので、エラーになる" do
+    user = build(:user, name: "lokijuhygtfrdesw")
+    expect(user).to be_invalid
+  end
 end
