@@ -31,7 +31,7 @@
 require "rails_helper"
 
 RSpec.describe User, type: :model do
-  context "name カラムに値が存在する"
+  context "name, email, password カラムに値が存在する"
   it "validationを通過し、userが作成される" do
     user = build(:user)
     expect(user).to be_valid
@@ -43,15 +43,21 @@ RSpec.describe User, type: :model do
     expect(user).to be_invalid
   end
 
-  context "name カラムの文字数が 14 字以内である時"
-  it "validationを通過" do
-    user = build(:user, name: "lokijuhygtfrde")
-    expect(user).to be_valid
-  end
-
   context "name カラムの文字数が 14 字以上である時"
   it "name が 14 以上なので、エラーになる" do
     user = build(:user, name: "lokijuhygtfrdesw")
+    expect(user).to be_invalid
+  end
+
+  context "email カラムに値が存在しない時"
+  it "email が存在しないので、エラーになる" do
+    user = build(:user, email: "")
+    expect(user).to be_invalid
+  end
+
+  context "password カラムに値が存在しない時"
+  it "password が存在しないので、エラーになる" do
+    user = build(:user, password: "")
     expect(user).to be_invalid
   end
 end
