@@ -44,8 +44,8 @@ RSpec.describe User, type: :model do
   end
 
   context "name カラムの文字数が 14 字以上である時"
-  it "name が 14 以上なので、エラーになる" do
-    user = build(:user, name: "lokijuhygtfrdesw")
+  it "name が 14 以上なのでエラーになる" do
+    user = build(:user, name: "a" * 15)
     expect(user).to be_invalid
   end
 
