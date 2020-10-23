@@ -25,21 +25,24 @@ RSpec.describe Comment, type: :model do
   let(:user) { create(:user) }
   let(:article) { create(:article, user_id: user.id) }
 
-  context "body カラムに値が存在する時"
-  it "コメントが投稿される" do
-    comment = build(:comment, user_id: user.id, article_id: article.id)
-    expect(comment).to be_valid
+  context "body カラムに値が存在する時" do
+    it "コメントが投稿される" do
+      comment = build(:comment, user_id: user.id, article_id: article.id)
+      expect(comment).to be_valid
+    end
   end
 
-  context "body カラムに値が存在しない時"
-  it "コメントが投稿されない" do
-    comment = build(:comment, body: "", user_id: user.id, article_id: article.id)
-    expect(comment).to be_invalid
+  context "body カラムに値が存在しない時" do
+    it "コメントが投稿されない" do
+      comment = build(:comment, body: "", user_id: user.id, article_id: article.id)
+      expect(comment).to be_invalid
+    end
   end
 
-  context "body カラムの文字数が 50 以上の時"
-  it "文字数が多いのでコメントが投稿されない" do
-    comment = build(:comment, body: "a" * 51, user_id: user.id, article_id: article.id)
-    expect(comment).to be_invalid
+  context "body カラムの文字数が 50 以上の時" do
+    it "文字数が多いのでコメントが投稿されない" do
+      comment = build(:comment, body: "a" * 51, user_id: user.id, article_id: article.id)
+      expect(comment).to be_invalid
+    end
   end
 end
