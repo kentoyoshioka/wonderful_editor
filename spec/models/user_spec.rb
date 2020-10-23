@@ -31,33 +31,51 @@
 require "rails_helper"
 
 RSpec.describe User, type: :model do
-  context "name, email, password カラムに値が存在する"
-  it "validationを通過し、userが作成される" do
-    user = build(:user)
-    expect(user).to be_valid
+  context "name, email, password カラムに値が存在する" do
+    let(:user) { build(:user) }
+
+    it "validationを通過し、userが作成される" do
+      expect(user).to be_valid
+    end
   end
 
-  context "name カラムに値が存在しない時"
-  it "name が存在しないので、エラーになる" do
-    user = build(:user, name: "")
-    expect(user).to be_invalid
+  context "name カラムに値が存在しない時" do
+    let(:user) { build(:user, name: nil) }
+
+    it "name が存在しないので、エラーになる" do
+      expect(user).to be_invalid
+    end
   end
 
-  context "name カラムの文字数が 14 字以上である時"
-  it "name が 14 以上なのでエラーになる" do
-    user = build(:user, name: "a" * 15)
-    expect(user).to be_invalid
+  context "name カラムのみ値が存在する時" do
+    let(:user) { build(:user, email: nil, password: nil) }
+
+    it "name が存在しないので、エラーになる" do
+      expect(user).to be_invalid
+    end
   end
 
-  context "email カラムに値が存在しない時"
-  it "email が存在しないので、エラーになる" do
-    user = build(:user, email: "")
-    expect(user).to be_invalid
+  context "name カラムの文字数が 14 字以上である時" do
+    let(:user) { build(:user, name: "a" * 15) }
+
+    it "name が 14 以上なのでエラーになる" do
+      expect(user).to be_invalid
+    end
   end
 
-  context "password カラムに値が存在しない時"
-  it "password が存在しないので、エラーになる" do
-    user = build(:user, password: "")
-    expect(user).to be_invalid
+  context "email カラムに値が存在しない時" do
+    let(:user) { build(:user, email: nil) }
+
+    it "email が存在しないので、エラーになる" do
+      expect(user).to be_invalid
+    end
+  end
+
+  context "password カラムに値が存在しない時" do
+    let(:user) { build(:user, password: nil) }
+
+    it "password が存在しないので、エラーになる" do
+      expect(user).to be_invalid
+    end
   end
 end

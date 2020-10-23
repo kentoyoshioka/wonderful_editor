@@ -22,27 +22,31 @@ require "rails_helper"
 RSpec.describe Article, type: :model do
   let(:user) { create(:user) }
 
-  context "title, body, user_id カラムに値がある時"
-  it "記事が登録される" do
-    article = build(:article, user_id: user.id)
-    expect(article).to be_valid
+  context "title, body, user_id カラムに値がある時" do
+    it "記事が登録される" do
+      article = build(:article, user_id: user.id)
+      expect(article).to be_valid
+    end
   end
 
-  context "title カラムに値がない時"
-  it "タイトルがないので記事は登録されない" do
-    article = build(:article, title: "", user_id: user.id)
-    expect(article).to be_invalid
+  context "title カラムに値がない時" do
+    it "タイトルがないので記事は登録されない" do
+      article = build(:article, title: "", user_id: user.id)
+      expect(article).to be_invalid
+    end
   end
 
-  context "title カラムの値が 20 以上の時"
-  it "タイトルの文字数が 20 字以上なので記事は登録されない" do
-    article = build(:article, title: "poiuytrewqasdfghjklmnbvc", user_id: user.id)
-    expect(article).to be_invalid
+  context "title カラムの値が 20 以上の時" do
+    it "タイトルの文字数が 20 字以上なので記事は登録されない" do
+      article = build(:article, title: "poiuytrewqasdfghjklmnbvc", user_id: user.id)
+      expect(article).to be_invalid
+    end
   end
 
-  context "body カラムに値がない時"
-  it "記事の内容がないので記事は登録されない" do
-    article = build(:article, body: "", user_id: user.id)
-    expect(article).to be_invalid
+  context "body カラムに値がない時" do
+    it "記事の内容がないので記事は登録されない" do
+      article = build(:article, body: "", user_id: user.id)
+      expect(article).to be_invalid
+    end
   end
 end
