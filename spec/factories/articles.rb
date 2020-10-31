@@ -21,5 +21,6 @@ FactoryBot.define do
   factory :article do
     title { Faker::Games::Pokemon.move }
     body { Faker::Lorem.sentence }
+    user
   end
 end
