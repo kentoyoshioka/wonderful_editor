@@ -1,3 +1,3 @@
 class Api::V1::ArticleSerializer < ActiveModel::Serializer
-  attributes :id
+  attributes :id, :title, :body, :updated_at
 end
