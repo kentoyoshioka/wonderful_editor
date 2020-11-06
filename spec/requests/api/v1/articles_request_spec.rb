@@ -37,6 +37,7 @@ RSpec.describe "Api::V1::Articles", type: :request do
         expect(json["title"]).to eq article.title
         expect(json["body"]).to eq article.body
         expect(json["updated_at"]).to be_present
+        # binding.pry
         expect(json["user"]["id"]).to eq article.user.id
         expect(json["user"].keys).to eq ["id", "name", "email"]
         expect(response.status).to eq(200)
