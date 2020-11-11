@@ -52,4 +52,24 @@ RSpec.describe "Api::V1::Articles", type: :request do
       end
     end
   end
+
+  describe "POST /articles" do
+    subject { post(api_v1_articles_path, params: params) }
+
+    context "title, bodyに値が存在する場合" do
+      let(:params) { { article: attributes_for(:article) } }
+      let(:current_user) { create(:user) }
+
+      before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
+
+      it "記事が作成される" do
+        expect { subject }.to change { Article.count }.by(1)
+
+        json = JSON.parse(response.body)
+        expect(json["title"]).to eq params[:article][:title]
+        expect(json["body"]).to eq params[:article][:body]
+        expect(response.status).to eq(200)
+      end
+    end
+  end
 end
