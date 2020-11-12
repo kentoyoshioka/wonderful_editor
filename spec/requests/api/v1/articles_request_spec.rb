@@ -83,7 +83,7 @@ RSpec.describe "Api::V1::Articles", type: :request do
 
       before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
 
-      it "任意の記事が更新される" do
+      fit "任意の記事が更新される" do
         expect { subject }.to change { article.reload.title }.from(article.title).to(params[:article][:title]) &
                               change { article.reload.body }.from(article.body).to(params[:article][:body]) &
                               not_change { article.reload.created_at }
@@ -92,14 +92,6 @@ RSpec.describe "Api::V1::Articles", type: :request do
       end
     end
 
-    context "自分が所持していない記事のレコードを更新しようとするとき" do
-      let(:other_user) { create(:user) }
-      let!(:article) { create(:article, user: other_user) }
 
-      it "更新できない" do
-        expect { subject }.to raise_error(ActiveRecord::RecordNotFound) &
-                              change { Article.count }.by(0)
-      end
-    end
   end
 end
