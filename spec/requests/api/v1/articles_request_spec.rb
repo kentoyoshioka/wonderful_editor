@@ -63,12 +63,42 @@ RSpec.describe "Api::V1::Articles", type: :request do
       before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
 
       it "記事が作成される" do
-        expect { subject }.to change { Article.count }.by(1)
+        expect { subject }.to change { Article.where(user_id: current_user.id).count }.by(1)
 
         json = JSON.parse(response.body)
         expect(json["title"]).to eq params[:article][:title]
         expect(json["body"]).to eq params[:article][:body]
         expect(response.status).to eq(200)
+      end
+    end
+  end
+
+  describe "PATCH /articles/:id" do
+    subject { patch(api_v1_article_path(article.id), params: params) }
+
+    context "title, bodyに値が存在する場合" do
+      let(:article) { create(:article, user: current_user) }
+      let(:params) { { article: attributes_for(:article) } }
+      let(:current_user) { create(:user) }
+
+      before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
+
+      it "任意の記事が更新される" do
+        expect { subject }.to change { article.reload.title }.from(article.title).to(params[:article][:title]) &
+                              change { article.reload.body }.from(article.body).to(params[:article][:body]) &
+                              not_change { article.reload.created_at }
+        expect(response.status).to eq(200)
+        # json = JSON.parse(response.body)
+      end
+    end
+
+    context "自分が所持していない記事のレコードを更新しようとするとき" do
+      let(:other_user) { create(:user) }
+      let!(:article) { create(:article, user: other_user) }
+
+      it "更新できない" do
+        expect { subject }.to raise_error(ActiveRecord::RecordNotFound) &
+                              change { Article.count }.by(0)
       end
     end
   end
