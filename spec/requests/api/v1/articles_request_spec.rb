@@ -11,13 +11,13 @@ RSpec.describe "Api::V1::Articles", type: :request do
     it "記事一覧の表示" do
       subject
 
-      json = JSON.parse(response.body)
+      res = JSON.parse(response.body)
       # binding.pry
-      expect(json.length).to eq(3)
+      expect(res.length).to eq(3)
       expect(response.status).to eq(200)
-      expect(json.map {|h| h["id"] }).to eq [article3.id, article1.id, article2.id]
-      expect(json[0].keys).to eq ["id", "title", "updated_at", "user"]
-      expect(json[0]["user"].keys).to eq ["id", "name", "email"]
+      expect(res.map {|h| h["id"] }).to eq [article3.id, article1.id, article2.id]
+      expect(res[0].keys).to eq ["id", "title", "updated_at", "user"]
+      expect(res[0]["user"].keys).to eq ["id", "name", "email"]
     end
   end
 
@@ -31,15 +31,15 @@ RSpec.describe "Api::V1::Articles", type: :request do
       it "記事のタイトル、内容を取得する" do
         subject
 
-        json = JSON.parse(response.body)
+        res = JSON.parse(response.body)
 
-        expect(json["id"]).to eq article.id
-        expect(json["title"]).to eq article.title
-        expect(json["body"]).to eq article.body
-        expect(json["updated_at"]).to be_present
+        expect(res["id"]).to eq article.id
+        expect(res["title"]).to eq article.title
+        expect(res["body"]).to eq article.body
+        expect(res["updated_at"]).to be_present
         # binding.pry
-        expect(json["user"]["id"]).to eq article.user.id
-        expect(json["user"].keys).to eq ["id", "name", "email"]
+        expect(res["user"]["id"]).to eq article.user.id
+        expect(res["user"].keys).to eq ["id", "name", "email"]
         expect(response.status).to eq(200)
       end
     end
@@ -65,9 +65,9 @@ RSpec.describe "Api::V1::Articles", type: :request do
       it "記事が作成される" do
         expect { subject }.to change { Article.where(user_id: current_user.id).count }.by(1)
 
-        json = JSON.parse(response.body)
-        expect(json["title"]).to eq params[:article][:title]
-        expect(json["body"]).to eq params[:article][:body]
+        res = JSON.parse(response.body)
+        expect(res["title"]).to eq params[:article][:title]
+        expect(res["body"]).to eq params[:article][:body]
         expect(response.status).to eq(200)
       end
     end
