@@ -10,9 +10,11 @@ RSpec.describe "Api::V1::Auth::Registrations", type: :request do
       it "ユーザーが作成される" do
         expect { subject }.to change { User.count }.by(1)
         expect(response).to have_http_status(:ok)
+        res = JSON.parse(response.body)
+        expect(res["data"]["email"]).to eq(User.last.email)
       end
 
-      it "header の情報が送られる" do
+      it "header の情報を取得することができる" do
         subject
         header = response.header
         expect(header["access-token"]).to be_present
@@ -23,27 +25,28 @@ RSpec.describe "Api::V1::Auth::Registrations", type: :request do
       end
     end
 
-    context "入力した値が既に使用されている時" do
-      let(:params) { attributes_for(:user, email: "example@email.com") }
-      let!(:other_user) { create(:user, email: "example@email.com") }
+    # context "入力した値が既に使用されている時" do
+    #   let(:params) { attributes_for(:user, email: "example@email.com") }
+    #   let!(:other_user) { create(:user, email: "example@email.com") }
 
-      it "ユーザー登録に失敗する" do
-        expect { subject }.to change { User.count }.by(0)
-        json = JSON.parse(response.body)
-        expect(json["data"]["email"]).to eq(other_user.email)
-        expect(response.status).to eq(422)
-      end
-    end
+    #   it "ユーザー登録に失敗する" do
+    #     expect { subject }.to change { User.count }.by(0)
+    #     json = JSON.parse(response.body)
+    #     expect(json["data"]["email"]).to eq(other_user.email)
+    #     expect(response.status).to eq(422)
+    #   end
+    # end
 
     context "name が存在しない時" do
       let(:params) { attributes_for(:user, name: nil) }
 
       it "ユーザーの新規登録に失敗する" do
-        # binding.pry
         expect { subject }.to change { User.count }.by(0)
-        json = JSON.parse(response.body)
-        expect(response.status).to eq(422)
-        expect(json["data"]["name"]).to eq(nil)
+        res = JSON.parse(response.body)
+        # expect(response.status).to eq(422)
+        # expect(res["data"]["name"]).to eq(nil)
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(res["errors"]["name"]).to include "can't be blank"
       end
     end
 
@@ -52,9 +55,11 @@ RSpec.describe "Api::V1::Auth::Registrations", type: :request do
 
       it "ユーザーの新規登録に失敗する" do
         expect { subject }.to change { User.count }.by(0)
-        json = JSON.parse(response.body)
-        expect(response.status).to eq(422)
-        expect(json["data"]["email"]).to eq(nil)
+        res = JSON.parse(response.body)
+        # expect(response.status).to eq(422)
+        # expect(res["data"]["email"]).to eq(nil)
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(res["errors"]["email"]).to include "can't be blank"
       end
     end
 
@@ -63,9 +68,11 @@ RSpec.describe "Api::V1::Auth::Registrations", type: :request do
 
       it "ユーザーの新規登録に失敗する" do
         expect { subject }.to change { User.count }.by(0)
-        json = JSON.parse(response.body)
-        expect(response.status).to eq(422)
-        expect(json["data"]["password"]).to eq(nil)
+        res = JSON.parse(response.body)
+        # expect(response.status).to eq(422)
+        # expect(res["data"]["password"]).to eq(nil)
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(res["errors"]["password"]).to include "can't be blank"
       end
     end
   end
