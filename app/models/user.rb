@@ -48,6 +48,4 @@ class User < ApplicationRecord
   has_many :article_likes, dependent: :destroy
 
   validates :name, presence: true, length: { maximum: 14 }
-  validates :email, presence: true
-  validates :password, presence: true
 end
