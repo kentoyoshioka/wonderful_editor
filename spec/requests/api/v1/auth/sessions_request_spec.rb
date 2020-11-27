@@ -87,16 +87,17 @@ RSpec.describe "Api::V1::Auth::Sesseions", type: :request do
       let(:headers) { user.create_new_auth_token }
 
       it "ログアウトに成功する" do
-        subject
+        # subject
 
-        expect(user.reload.tokens).to be_blank
-
-        header = response.header
-        expect(header["access-token"]).to be_blank
-        expect(header["client"]).to be_blank
-        expect(header["uid"]).to be_blank
-
+        expect { subject }.to change { user.reload.tokens }.from(be_present).to(be_blank)
         expect(response).to have_http_status(:ok)
+
+        # expect(user.reload.tokens).to be_blank
+
+        # header = response.header
+        # expect(header["access-token"]).to be_blank
+        # expect(header["client"]).to be_blank
+        # expect(header["uid"]).to be_blank
       end
     end
 
@@ -107,10 +108,8 @@ RSpec.describe "Api::V1::Auth::Sesseions", type: :request do
 
       it "ログアウトに失敗する" do
         subject
-
         res = JSON.parse(response.body)
         expect(res["errors"]).to include "User was not found or was not logged in."
-
         expect(response).to have_http_status(:not_found)
       end
     end
