@@ -1,6 +1,6 @@
 class AddTrackableToUsers < ActiveRecord::Migration[6.0]
   def change
-    change_table :users do |t|
+    change_table :users, bulk: true do |t|
       ## Trackable
       t.integer  :sign_in_count, default: 0, null: false
       t.datetime :current_sign_in_at
