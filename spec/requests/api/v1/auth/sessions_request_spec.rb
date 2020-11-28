@@ -86,7 +86,7 @@ RSpec.describe "Api::V1::Auth::Sesseions", type: :request do
       let(:user) { create(:user) }
       let(:headers) { user.create_new_auth_token }
 
-      fit "ログアウトに成功する" do
+      it "ログアウトに成功する" do
         subject
 
         # expect { subject }.to change { user.reload.tokens }.from(be_present).to(be_blank)
