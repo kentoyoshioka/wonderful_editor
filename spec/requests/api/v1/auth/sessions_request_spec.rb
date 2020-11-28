@@ -91,7 +91,6 @@ RSpec.describe "Api::V1::Auth::Sesseions", type: :request do
 
         # expect { subject }.to change { user.reload.tokens }.from(be_present).to(be_blank)
 
-
         expect(user.reload.tokens).to be_blank
 
         # header = response.header
