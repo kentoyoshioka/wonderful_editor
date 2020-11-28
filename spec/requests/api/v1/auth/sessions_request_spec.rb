@@ -87,17 +87,17 @@ RSpec.describe "Api::V1::Auth::Sesseions", type: :request do
       let(:headers) { user.create_new_auth_token }
 
       it "ログアウトに成功する" do
-        # subject
+        subject
 
-        expect { subject }.to change { user.reload.tokens }.from(be_present).to(be_blank)
-        expect(response).to have_http_status(:ok)
+        # expect { subject }.to change { user.reload.tokens }.from(be_present).to(be_blank)
 
-        # expect(user.reload.tokens).to be_blank
+        expect(user.reload.tokens).to be_blank
 
         # header = response.header
         # expect(header["access-token"]).to be_blank
         # expect(header["client"]).to be_blank
         # expect(header["uid"]).to be_blank
+        expect(response).to have_http_status(:ok)
       end
     end
 
