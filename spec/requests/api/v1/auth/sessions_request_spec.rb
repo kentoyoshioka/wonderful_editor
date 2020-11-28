@@ -106,9 +106,8 @@ RSpec.describe "Api::V1::Auth::Sesseions", type: :request do
       let!(:tokens) { user.create_new_auth_token }
       let(:headers) { { "access-token" => "", "token-type" => "", "client" => "", "expiry" => "", "uid" => "" } }
 
-      fit "ログアウトに失敗する" do
+      it "ログアウトに失敗する" do
         subject
-        binding.pry
         res = JSON.parse(response.body)
         expect(res["errors"]).to include "User was not found or was not logged in."
         expect(response).to have_http_status(:not_found)
