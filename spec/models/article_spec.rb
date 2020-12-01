@@ -4,6 +4,7 @@
 #
 #  id         :bigint           not null, primary key
 #  body       :text
+#  status     :integer          default("draft")
 #  title      :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
@@ -20,33 +21,52 @@
 require "rails_helper"
 
 RSpec.describe Article, type: :model do
-  let(:user) { create(:user) }
+  describe "正常系" do
+    context "title, body, user_id カラムに値がある時" do
+      let(:article) { build(:article) }
 
-  context "title, body, user_id カラムに値がある時" do
-    it "記事が登録される" do
-      article = build(:article, user_id: user.id)
-      expect(article).to be_valid
+      it "下書き状態の記事が登録される" do
+        expect(article).to be_valid
+        expect(article.status).to eq("draft")
+      end
+
+      it "公開記事だけ取得できる" do
+        article = build(:article, status: "published")
+        expect(article).to be_valid
+        expect(article.status).to eq("published")
+      end
+
+      it "下書き記事だけ取得できる" do
+        article = build(:article, status: "draft")
+        expect(article).to be_valid
+        expect(article.status).to eq("draft")
+      end
     end
   end
 
-  context "title カラムに値がない時" do
-    it "タイトルがないので記事は登録されない" do
-      article = build(:article, title: "", user_id: user.id)
-      expect(article).to be_invalid
+  describe "異常系" do
+    context "title カラムに値がない時" do
+      it "タイトルがないので記事は登録されない" do
+        article = build(:article, title: nil)
+        expect(article).to be_invalid
+        expect(article.errors.messages[:title]).to include "can't be blank"
+      end
     end
-  end
 
-  context "title カラムの値が 20 以上の時" do
-    it "タイトルの文字数が 20 字以上なので記事は登録されない" do
-      article = build(:article, title: "poiuytrewqasdfghjklmnbvc", user_id: user.id)
-      expect(article).to be_invalid
+    context "title カラムの値が 20 以上の時" do
+      it "タイトルの文字数が 20 字以上なので記事は登録されない" do
+        article = build(:article, title: "poiuytrewqasdfghjklmnbvc")
+        expect(article).to be_invalid
+        expect(article.errors.messages[:title]).to include "is too long (maximum is 20 characters)"
+      end
     end
-  end
 
-  context "body カラムに値がない時" do
-    it "記事の内容がないので記事は登録されない" do
-      article = build(:article, body: "", user_id: user.id)
-      expect(article).to be_invalid
+    context "body カラムに値がない時" do
+      it "記事の内容がないので記事は登録されない" do
+        article = build(:article, body: nil)
+        expect(article).to be_invalid
+        expect(article.errors.messages[:body]).to include "can't be blank"
+      end
     end
   end
 end
