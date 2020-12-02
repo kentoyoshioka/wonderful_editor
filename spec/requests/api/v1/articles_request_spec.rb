@@ -16,7 +16,7 @@ RSpec.describe "Api::V1::Articles", type: :request do
       expect(res.length).to eq(3)
       expect(response.status).to eq(200)
       expect(res.map {|h| h["id"] }).to eq [article3.id, article1.id, article2.id]
-      expect(res[0].keys).to eq ["id", "title", "updated_at", "user"]
+      expect(res[0].keys).to eq ["id", "title", "updated_at", "user", "status"]
       expect(res[0]["user"].keys).to eq ["id", "name", "email"]
     end
   end
