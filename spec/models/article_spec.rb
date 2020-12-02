@@ -22,7 +22,7 @@ require "rails_helper"
 
 RSpec.describe Article, type: :model do
   describe "正常系" do
-    context "title, body, user_id カラムに値がある時" do
+    context "title, body カラムに値がある時" do
       let(:article) { build(:article) }
 
       it "下書き状態の記事が登録される" do
