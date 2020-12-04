@@ -38,7 +38,7 @@ RSpec.describe "Api::V1::Articles", type: :request do
           expect(res["title"]).to eq article.title
           expect(res["body"]).to eq article.body
           expect(res["updated_at"]).to be_present
-          expect(res["status"]).to eq article.status
+          expect(res["status"]).to eq "published"
           expect(res["user"]["id"]).to eq article.user.id
           expect(res["user"].keys).to eq ["id", "name", "email"]
           expect(response.status).to eq(200)
@@ -97,22 +97,22 @@ RSpec.describe "Api::V1::Articles", type: :request do
 
     let(:headers) { current_user.create_new_auth_token }
 
-    context "自分の記事の更新をする場合" do
+    context "自分の記事を更新をする場合" do
       # 更新前の記事の作成
       let(:article) { create(:article, user: current_user, status: :draft) }
 
       it "任意の記事が更新される" do
         expect { subject }.to change { article.reload.title }.from(article.title).to(params[:article][:title]) &
                               change { article.reload.body }.from(article.body).to(params[:article][:body]) &
+                              change { article.reload.status }.from(article.status).to(params[:article][:status].to_s) &
                               not_change { article.reload.created_at }
-
         expect(response.status).to eq(200)
       end
     end
 
     context "自分が所持していない記事のレコードを更新しようとするとき" do
       let(:other_user) { create(:user) }
-      let!(:article) { create(:article, user: other_user) }
+      let!(:article) { create(:article, status: :draft, user: other_user) }
 
       it "更新できない" do
         expect { subject }.to raise_error(ActiveRecord::RecordNotFound) &
