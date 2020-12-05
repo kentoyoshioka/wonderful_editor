@@ -44,13 +44,21 @@ RSpec.describe "Api::V1::Articles", type: :request do
           expect(response.status).to eq(200)
         end
       end
+
+      context "下書き状態の記事の場合" do
+        let(:article) { create(:article, :draft) }
+
+        it "記事が見つからない" do
+          expect { subject }.to raise_error ActiveRecord::RecordNotFound
+        end
+      end
     end
 
     context "指定した id の記事が存在しない場合" do
-      let(:article_id) { 1_000_000 }
+      let(:article_id) { 1000000 }
 
       it "記事が見つからない" do
-        expect { subject }.to raise_error ActiveRecord::RecordNotFound
+        expect { subject }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
   end
@@ -65,8 +73,7 @@ RSpec.describe "Api::V1::Articles", type: :request do
       let(:params) { { article: attributes_for(:article, status: :published) } }
 
       it "公開設定の記事が作成される" do
-        expect { subject }.to change { Article.where(user_id: current_user.id).count }.by(1)
-        # binding.pry
+        expect { subject }.to change { current_user.articles.count }.by(1)
         res = JSON.parse(response.body)
         expect(res["title"]).to eq params[:article][:title]
         expect(res["body"]).to eq params[:article][:body]
@@ -79,12 +86,23 @@ RSpec.describe "Api::V1::Articles", type: :request do
       let(:params) { { article: attributes_for(:article, status: :draft) } }
 
       it "下書き設定の記事が作成される" do
-        expect { subject }.to change { Article.where(user_id: current_user.id).count }.by(1)
+        # 模範　expect { subject }.to change { Article.count }.by(1)
+        expect { subject }.to change { current_user.articles.count }.by(1)
         res = JSON.parse(response.body)
-        expect(res["title"]).to eq params[:article][:title]
-        expect(res["body"]).to eq params[:article][:body]
+        # ↓　title,body に関してはどちらかなくても下書き保存できる？為なくても良い
+        # expect(res["title"]).to eq params[:article][:title]
+        # expect(res["body"]).to eq params[:article][:body]
         expect(res["status"]).to eq "draft"
         expect(response.status).to eq(200)
+      end
+    end
+
+    # ↓　エラーテストの追加
+    context "でたらめな指定で記事を作成する時" do
+      let(:params) { { article: attributes_for(:article, status: :foo) } }
+
+      fit "エラーになる" do
+        expect { subject }.to raise_error(ArgumentError)
       end
     end
   end
@@ -112,7 +130,7 @@ RSpec.describe "Api::V1::Articles", type: :request do
 
     context "自分が所持していない記事のレコードを更新しようとするとき" do
       let(:other_user) { create(:user) }
-      let!(:article) { create(:article, status: :draft, user: other_user) }
+      let!(:article) { create(:article, user: other_user) }
 
       it "更新できない" do
         expect { subject }.to raise_error(ActiveRecord::RecordNotFound) &
