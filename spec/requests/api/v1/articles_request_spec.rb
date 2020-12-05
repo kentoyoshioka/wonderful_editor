@@ -55,7 +55,7 @@ RSpec.describe "Api::V1::Articles", type: :request do
     end
 
     context "指定した id の記事が存在しない場合" do
-      let(:article_id) { 1000000 }
+      let(:article_id) { 1_000_000 }
 
       it "記事が見つからない" do
         expect { subject }.to raise_error(ActiveRecord::RecordNotFound)
@@ -101,7 +101,7 @@ RSpec.describe "Api::V1::Articles", type: :request do
     context "でたらめな指定で記事を作成する時" do
       let(:params) { { article: attributes_for(:article, status: :foo) } }
 
-      fit "エラーになる" do
+      it "エラーになる" do
         expect { subject }.to raise_error(ArgumentError)
       end
     end
