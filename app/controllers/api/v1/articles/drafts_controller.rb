@@ -10,7 +10,7 @@ module Api
         end
 
         def show
-          article = Article.draft.find(params[:id])
+          article = current_user.articles.draft.find(params[:id])
           render json: article, serializer: Api::V1::ArticleSerializer
         end
       end
