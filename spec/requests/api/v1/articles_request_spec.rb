@@ -49,7 +49,7 @@ RSpec.describe "Api::V1::Articles", type: :request do
         let(:article) { create(:article, :draft) }
 
         it "記事が見つからない" do
-          expect { subject }.to raise_error ActiveRecord::RecordNotFound
+          expect { subject }.to raise_error(ActiveRecord::RecordNotFound)
         end
       end
     end
