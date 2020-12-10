@@ -16,6 +16,7 @@ Rails.application.routes.draw do
         resources :drafts, only: [:index, :show]
       end
       resources :articles
+      resources :currents, path: "current/articles", only: [:index]
     end
   end
 end
