@@ -15,8 +15,10 @@ Rails.application.routes.draw do
       namespace :articles do
         resources :drafts, only: [:index, :show]
       end
+      namespace :current do
+        resources :articles, only: [:index]
+      end
       resources :articles
-      resources :currents, path: "current/articles", only: [:index]
     end
   end
 end
