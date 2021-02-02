@@ -26,6 +26,7 @@ gem "turbolinks", "~> 5"
 gem "active_model_serializers", "~> 0.10.0"
 gem "config"
 gem "devise_token_auth"
+gem "rack-cors"
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
