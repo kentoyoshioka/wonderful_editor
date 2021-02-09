@@ -1,24 +1,13 @@
-# README
+## 概要
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Ruby on Rails の勉強の成果としてのスクールでの課題を作成しました。
+Qiita 風の記事作成アプリになります。
 
-Things you may want to cover:
+※ フロントエンド側に関してはスクールにて用意された物を使用しておりますが、フロントエンドサイドも現在学習中でいずれアップデートしていこうと考えております。
 
-* Ruby version
+## 動作環境
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+- Ruby: 2.7.2
+- Rails: 6.0.3.2
+- Vue.js: 2.6.11
+- DB: PostgreSQL
